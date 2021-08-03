@@ -1,24 +1,28 @@
-import logo from './logo.svg';
+import { Container, Grid, Typography } from '@material-ui/core';
+import { useState } from 'react';
+import { useGet } from './HTTP/HTTP';
 import './App.css';
+import Products from './Components/Products/Products';
+import Loader from './layout/Loader/Loader';
 
 function App() {
+
+  const [endpoint, setEndpoint] = useState('');
+  const { loading, data } = useGet(endpoint);
+
+//  const mySearch = (producto) =>{
+//   setEndpoint(`category?=${producto}`);
+//  } 
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container>
+      <Typography variant='h3' component='h1'>
+        Hola
+      </Typography>
+      {loading ? <Loader/>
+      : <Products data={data}/> }
+       
+    </Container>
   );
 }
 
