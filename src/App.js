@@ -1,28 +1,29 @@
-import { Container, Grid, Typography } from '@material-ui/core';
-import { useState } from 'react';
-import { useGet } from './HTTP/HTTP';
-import './App.css';
-import Products from './Components/Products/Products';
+import { Suspense, lazy } from 'react';
+import { Switch, Route } from 'react-router-dom';
+import { Container, Grid} from '@material-ui/core';
+import Header from './layout/Header/Header';
 import Loader from './layout/Loader/Loader';
+import { useStyles } from './style';
 
+const Home = lazy(() => import('./Components/Products/Products'));
+const DetailProduct = lazy(()=>import('./Components/Product/Product'));
 function App() {
-
-  const [endpoint, setEndpoint] = useState('');
-  const { loading, data } = useGet(endpoint);
-
 //  const mySearch = (producto) =>{
 //   setEndpoint(`category?=${producto}`);
 //  } 
+const classes = useStyles();
 
   return (
-    <Container>
-      <Typography variant='h3' component='h1'>
-        Hola
-      </Typography>
-      {loading ? <Loader/>
-      : <Products data={data}/> }
-       
-    </Container>
+    <Suspense fallback={<Loader />}>
+      <Container className={classes.root}>
+        <Header/>
+        <Switch>
+          <Route exact path='/' component={Home}/>
+          <Route exact path='/product/:id' component={DetailProduct} />
+          <Route />
+        </Switch>
+      </Container>
+    </Suspense>
   );
 }
 

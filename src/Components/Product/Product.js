@@ -1,31 +1,47 @@
+import { useState } from 'react';
+import { useHistory, useParams } from 'react-router';
+import { useGet } from './../../HTTP/HTTP';
 import { Card, CardActionArea, CardActions, CardMedia, CardContent, Button, Typography } from '@material-ui/core';
 import { useStyles } from './style';
 
-const Product = ({image, title, price, description,category, id}) => {
-    const classes = useStyles();
+const Product = () => {
+    const { id } = useParams();
+    const [endpoint, setEndpoint] = useState(`/${id}`);
+    const { data } = useGet(endpoint);
     
+    const history = useHistory();
+    const classes = useStyles();
+
+    const handlerBack = () =>{
+        history.push('/');
+    }
+
     return ( 
-        <Card item className={classes.root} xs={12} md={6} lg={4}>
+        <>
+        <h1>product detail</h1>
+        <Card item className={classes.root} xs={12} md={8}>
       <CardActionArea>
         <CardMedia
           className={classes.media}
-          image={image}
+          image={data.image}
         />
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="h2">
-            {title}
+        <CardContent className={classes.content}>
+          <Typography gutterBottom variant='h6'>
+          $ {data.price} <br/>
+          {data.title}
           </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
-          {price}
+          <Typography variant="body2" color="textSecondary">
+            {data.description}
           </Typography>
         </CardContent>
       </CardActionArea>
-      <CardActions>
-        <Button size="small" color="primary">
-         Ver Detalle
+      <CardActions className={classes.content}>
+        <Button size="small" color="primary" onClick={handlerBack}>
+         Volver
         </Button>
       </CardActions>
     </Card>
+        </>
      );
 }
  
